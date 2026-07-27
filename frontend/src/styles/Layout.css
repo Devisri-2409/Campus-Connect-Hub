@@ -1,0 +1,26 @@
+.dashboard-layout{
+    min-height:100vh;
+    background:var(--bg-primary);
+}
+
+.layout-container{
+    display:flex;
+}
+
+.page-content{
+    flex:1;
+    margin-left:260px;
+    margin-top:75px;
+    padding:30px;
+    min-height:calc(100vh - 75px);
+    transition:.3s;
+}
+
+@media(max-width:768px){
+
+.page-content{
+    margin-left:0;
+    padding:20px;
+}
+
+}

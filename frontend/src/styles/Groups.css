@@ -1,0 +1,354 @@
+.groups-container {
+    padding: 30px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+.groups-header {
+    margin-bottom: 30px;
+}
+
+.groups-header h1 {
+    font-size: 32px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.groups-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    width: 260px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.search-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+}
+
+.create-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.create-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.group-card {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+}
+
+.group-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.card-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.subject-badge {
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.group-card h2 {
+    color: #2563eb;
+    font-size: 1.2rem;
+    margin: 12px 0 8px 0;
+}
+
+.group-card h4 {
+    color: var(--text-secondary);
+}
+
+.group-description {
+    margin: 8px 0;
+    line-height: 1.5;
+    flex-grow: 1;
+    color: var(--text-tertiary);
+    font-size: 0.95rem;
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+}
+
+.group-info p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.join-btn, .delete-btn, .leave-btn {
+    width: 100%;
+    margin-top: auto;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.join-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.join-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.join-btn:disabled {
+    background: #16a34a;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.delete-btn, .leave-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.delete-btn:hover, .leave-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.group-modal {
+    background: var(--bg-primary);
+    width: 480px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow-hover);
+    border: 1px solid var(--border-color);
+    position: relative;
+    z-index: 10000;
+}
+
+.group-modal h2 {
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.group-modal input,
+.group-modal textarea {
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    outline: none;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.group-modal input:focus,
+.group-modal textarea:focus {
+    border-color: #2563eb;
+    background: var(--bg-primary);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.25);
+}
+
+.group-modal textarea {
+    resize: none;
+    height: 110px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.cancel-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background: var(--border-color);
+}
+
+.save-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.save-btn:hover {
+    background: #1d4ed8;
+}
+
+.empty-state, .loading-spinner {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state h2, .loading-spinner p {
+    color: var(--text-primary);
+}
+
+.spinner {
+    width: 55px;
+    height: 55px;
+    border: 6px solid var(--bg-tertiary);
+    border-top: 6px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .groups-container {
+        padding: 15px;
+    }
+
+    .header-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-actions {
+        flex-direction: column;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .groups-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .group-modal {
+        width: 90%;
+        max-width: 480px;
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
