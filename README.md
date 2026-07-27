@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# 🎓 Campus Connect Hub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Campus Connect Hub is a full-stack web application that enables college students to collaborate efficiently by creating study groups, scheduling study sessions, sharing notes, and receiving notifications.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Features
 
-### `npm start`
+- 🔐 User Authentication (Register & Login using JWT)
+- 👤 Student Profile Management
+- 👥 Create, Join, Leave, and Delete Study Groups
+- 📅 Schedule Online/Offline Study Sessions
+- 📚 Upload and Download Study Notes
+- 🔔 Notification System
+- 📱 Responsive Dashboard
+- 🛡 Protected Routes with Authentication
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠 Tech Stack
 
-### `npm test`
+### Frontend
+- React.js
+- React Router DOM
+- Axios
+- CSS
+- React Icons
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend
+- Node.js
+- Express.js
+- JWT Authentication
+- Multer (File Upload)
 
-### `npm run build`
+### Database
+- MySQL
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Tools
+- Git & GitHub
+- VS Code
+- Postman
+- XAMPP (Development)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📂 Project Structure
 
-### `npm run eject`
+```
+Campus-Connect-Hub/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── config/
+│   └── server.js
+│
+└── README.md
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## ⚙ Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Clone the Repository
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+git clone https://github.com/YOUR_USERNAME/Campus-Connect-Hub.git
+```
 
-## Learn More
+### Backend Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd backend
+npm install
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Frontend Setup
 
-### Code Splitting
+```bash
+cd frontend
+npm install
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The application will run at:
 
-### Analyzing the Bundle Size
+```
+Frontend : http://localhost:3000
+Backend  : http://localhost:5000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 📸 Project Modules
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- User Authentication
+- Dashboard
+- Study Groups
+- My Groups
+- Study Sessions
+- Notes Management
+- User Profile
+- Notifications
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🔮 Future Enhancements
 
-### Deployment
+- 💬 Real-time Group Chat
+- 📧 Email Notifications
+- 📅 Calendar Integration
+- 🤖 AI Study Assistant
+- 📊 Admin Dashboard & Analytics
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 👩‍💻 Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Devi Sri**
+
+B.Tech – Computer Science and Business Systems
+
+---
+
+## 📄 License
+
+This project is developed for educational and learning purposes.
