@@ -122,14 +122,6 @@ Backend  : http://localhost:5000
 
 ---
 
-## 👩‍💻 Author
-
-**Devi Sri**
-
-B.Tech – Computer Science and Business Systems
-
----
-
 ## 📄 License
 
 This project is developed for educational and learning purposes.
