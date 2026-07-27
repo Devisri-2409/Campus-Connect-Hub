@@ -1,0 +1,189 @@
+.sessions-container{
+    padding:30px;
+    background:var(--bg-primary);
+    min-height:100vh;
+}
+
+.session-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.session-header h1{
+    color:var(--text-primary);
+    font-size:32px;
+}
+
+.create-btn{
+    background:var(--accent-color);
+    color:white;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.create-btn:hover{
+    background:var(--accent-hover);
+    transform:translateY(-2px);
+}
+
+.session-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:25px;
+}
+
+.session-card{
+    background:var(--bg-secondary);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:var(--card-shadow);
+    transition:.3s;
+    border-left:6px solid var(--accent-color);
+}
+
+.session-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 30px rgba(37,99,235,.15);
+}
+
+.session-card h2{
+    color:var(--accent-color);
+    margin-bottom:12px;
+}
+
+.session-card p{
+    color:var(--text-secondary);
+    margin:10px 0;
+    line-height:1.5;
+}
+
+.delete-btn{
+    margin-top:18px;
+    width:100%;
+    padding:12px;
+    background:#ef4444;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.group-modal{
+    width:450px;
+    background:var(--bg-secondary);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.group-modal h2{
+    color:var(--accent-color);
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.group-modal input,
+.group-modal textarea{
+    width:100%;
+    margin-bottom:15px;
+    padding:12px;
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+}
+
+.group-modal input:focus,
+.group-modal textarea:focus{
+    border-color:var(--accent-color);
+}
+
+.group-modal textarea{
+    resize:none;
+    height:100px;
+}
+
+.modal-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:15px;
+}
+
+.cancel-btn{
+    background:var(--text-secondary);
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.cancel-btn:hover{
+    background:var(--text-tertiary);
+}
+
+.save-btn{
+    background:var(--accent-color);
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.save-btn:hover{
+    background:var(--accent-hover);
+}
+.group-modal select{
+    width : 100%;
+    padding : 12px;
+    margin-bottom : 15px;
+    border : 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+.group-modal select:focus{
+    border-color: var(--accent-color);
+}
+.join-btn{
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    background:var(--accent-success);
+    color:white;
+    padding:12px;
+    border-radius:10px;
+    text-decoration: none;
+    font-weight:600;
+    transition:.3s;
+}
+.join-btn:hover{
+    background:var(--accent-success-hover);
+}

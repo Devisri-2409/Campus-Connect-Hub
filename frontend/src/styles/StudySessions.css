@@ -1,0 +1,56 @@
+.session-container{
+    padding:30px;
+    background:#f8fafc;
+    min-height:100vh;
+}
+
+.session-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.create-session-btn{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.session-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:25px;
+}
+
+.session-card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.session-card h2{
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.session-card p{
+    margin:8px 0;
+    color:#475569;
+}
+
+.session-card button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    background:#10b981;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
