@@ -6,6 +6,7 @@ import {
     FaBook,
     FaCalendarAlt,
     FaUser,
+    FaRobot
    
 } from "react-icons/fa";
 
@@ -54,6 +55,12 @@ const Sidebar = () => {
     }>
                     <FaCalendarAlt />
                     Sessions
+                </NavLink>
+
+                <NavLink to="/assistant" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"
+    }>
+                    <FaRobot />
+                    AI Assistant
                 </NavLink>
 
                 <NavLink to="/profile" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"

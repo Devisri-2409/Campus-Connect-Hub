@@ -41,27 +41,47 @@
 
 .session-card{
     background:var(--bg-secondary);
-    border-radius:18px;
+    border-radius:22px;
     padding:22px;
     box-shadow:var(--card-shadow);
     transition:.3s;
     border-left:6px solid var(--accent-color);
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .session-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 12px 30px rgba(37,99,235,.15);
+    transform:translateY(-6px);
+    box-shadow:0 16px 32px rgba(37,99,235,.14);
 }
 
 .session-card h2{
-    color:var(--accent-color);
-    margin-bottom:12px;
+    color:var(--text-primary);
+    margin-bottom:10px;
 }
 
 .session-card p{
     color:var(--text-secondary);
-    margin:10px 0;
-    line-height:1.5;
+    margin:8px 0;
+    line-height:1.6;
+}
+
+.session-meta-row{
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.session-meta-row span{
+    background: var(--bg-tertiary);
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
 }
 
 .delete-btn{

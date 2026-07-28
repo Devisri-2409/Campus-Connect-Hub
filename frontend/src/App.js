@@ -3,6 +3,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 import Sessions from "./pages/Sessions";
+import Assistant from "./components/Assistant";
 import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
 import Notes from "./pages/Notes";
@@ -86,6 +87,17 @@ function App() {
       </ProtectedRoute>
     }
 />
+
+    <Route
+      path="/assistant"
+      element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Assistant />
+          </DashboardLayout>
+        </ProtectedRoute>
+      }
+    />
 
   </Routes>
 </BrowserRouter>

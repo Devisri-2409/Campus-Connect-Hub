@@ -24,19 +24,16 @@ const Sessions = () => {
     const [meetingLink,setMeetingLink] = useState("");
 
     const fetchSessions = async () => {
-
         try {
-
             const data = await getAllSessions();
-
-            setSessions(data);
-
+            const upcomingSessions = data.filter((session) => {
+                const sessionDateTime = new Date(`${session.session_date}T${session.session_time || "00:00"}`);
+                return sessionDateTime >= new Date();
+            });
+            setSessions(upcomingSessions);
         } catch (err) {
-
             console.log(err);
-
         }
-
     };
     const fetchMyGroups = async() =>{
         try{
@@ -143,13 +140,13 @@ const Sessions = () => {
                         <p>{session.description}</p>
                         <p>👥 {session.group_name}</p>
 
-                        <p>📅 { new Date(session.session_date).toLocaleDateString()}
-                            </p>
-                        <p>🕛{new Date(`1970-01T${session.session_time}`).toLocaleTimeString([],
-                        {  hour:"2-digit",
-                           minute:"2-digit"
-                        })}
-                            </p>
+                        <div className="session-meta-row">
+                            <span>📅 {new Date(session.session_date).toLocaleDateString()}</span>
+                            <span>🕛 {new Date(`1970-01T${session.session_time}`).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            })}</span>
+                        </div>
 
                         <p>📍 {session.location}</p>
                         {session.meeting_link &&(
