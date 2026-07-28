@@ -6,7 +6,7 @@ import "../styles/Assistant.css";
 
 const Assistant = () => {
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [setAnswer] = useState("");
   const [history, setHistory] = useState([]);
   const [notes, setNotes] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -58,7 +58,7 @@ const Assistant = () => {
     }
 
     const note = match[0];
-    return `I found a note titled \"${note.title}\". ${note.description || "No description available."} If you'd like, ask me to explain a specific note title or keyword.`;
+    return `I found a note titled "${note.title}". ${note.description || "No description available."} If you'd like, ask me to explain a specific note title or keyword.`;
   };
 
   const searchGroups = (query) => {
@@ -102,7 +102,7 @@ const Assistant = () => {
     }
 
     const session = match[0];
-    return `I found a session titled \"${session.title}\" for ${session.group_name}. It is scheduled on ${formatDate(session.session_date)} at ${formatTime(session.session_time)}. Location: ${session.location || "No location provided"}.`;
+    return `I found a session titled "${session.title}" for ${session.group_name}. It is scheduled on ${formatDate(session.session_date)} at ${formatTime(session.session_time)}. Location: ${session.location || "No location provided"}.`;
   };
 
   const handleAsk = () => {
@@ -131,7 +131,7 @@ const Assistant = () => {
     }
 
     setHistory((prev) => [...prev, { question: trimmed, answer: response }]);
-    setAnswer(response);
+    
     setQuestion("");
     setError("");
   };
