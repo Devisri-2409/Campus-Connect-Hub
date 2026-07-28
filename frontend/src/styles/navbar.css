@@ -208,13 +208,14 @@
     position: absolute;
     top: 52px;
     right: 0;
-    width: 380px;
-    background: var(--bg-secondary);
+    width: 420px;
+    max-width: 95vw;
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+    border-radius: 24px;
+    box-shadow: var(--card-shadow-hover);
     z-index: 999;
-    max-height: 460px;
+    max-height: 480px;
     overflow-y: auto;
 }
 
@@ -224,11 +225,11 @@
     color: var(--accent-color);
     font-size: 1rem;
     font-weight: 700;
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
 }
 
 .notification-item {
-    padding: 16px 20px;
+    padding: 18px 20px;
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
     transition: background 0.2s ease, transform 0.2s ease;
@@ -236,12 +237,8 @@
 }
 
 .notification-item:hover {
-    background: var(--bg-primary);
-    transform: translateX(2px);
-}
-
-.notification-item:hover {
     background: var(--bg-tertiary);
+    transform: translateX(0);
 }
 
 .notification-item strong {
