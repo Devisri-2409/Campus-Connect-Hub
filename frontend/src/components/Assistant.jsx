@@ -6,7 +6,7 @@ import "../styles/Assistant.css";
 
 const Assistant = () => {
   const [question, setQuestion] = useState("");
-  const [setAnswer] = useState("");
+
   const [history, setHistory] = useState([]);
   const [notes, setNotes] = useState([]);
   const [groups, setGroups] = useState([]);
