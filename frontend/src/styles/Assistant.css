@@ -59,6 +59,24 @@
   padding: 24px;
 }
 
+.assistant-file-label {
+  display: block;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.assistant-file-label input {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.assistant-file-name {
+  margin: 10px 0 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
 .assistant-input-card textarea {
   width: 100%;
   min-height: 170px;

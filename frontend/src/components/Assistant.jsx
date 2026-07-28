@@ -6,6 +6,9 @@ import "../styles/Assistant.css";
 
 const Assistant = () => {
   const [question, setQuestion] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [fileContent, setFileContent] = useState("");
+  const [fileError, setFileError] = useState("");
 
   const [history, setHistory] = useState([]);
   const [notes, setNotes] = useState([]);
@@ -105,6 +108,57 @@ const Assistant = () => {
     return `I found a session titled "${session.title}" for ${session.group_name}. It is scheduled on ${formatDate(session.session_date)} at ${formatTime(session.session_time)}. Location: ${session.location || "No location provided"}.`;
   };
 
+  const explainFileContent = (query) => {
+    if (!fileContent) {
+      return "No file content loaded. Please select a text file to explain.";
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const lines = fileContent.split(/\r?\n/).filter((line) => line.trim());
+    const tokens = lowerQuery.split(/\s+/).filter(Boolean);
+
+    const matchingLine = lines.find((line) =>
+      tokens.every((token) => line.toLowerCase().includes(token))
+    );
+
+    if (matchingLine) {
+      return `From ${selectedFileName}: ${matchingLine.trim()}. If you want more details, ask about another keyword or concept from the file.`;
+    }
+
+    const preview = fileContent.slice(0, 450).replace(/\s+/g, " ");
+    return `I loaded ${selectedFileName}. Here is a quick snapshot of the file content: ${preview}${fileContent.length > 450 ? "..." : ""}`;
+  };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      setSelectedFileName("");
+      setFileContent("");
+      setFileError("");
+      return;
+    }
+
+    if (!file.type.includes("text") && !file.name.endsWith(".md") && !file.name.endsWith(".txt")) {
+      setFileError("Only plain text or markdown files are supported right now.");
+      setSelectedFileName("");
+      setFileContent("");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedFileName(file.name);
+      setFileContent(reader.result || "");
+      setFileError("");
+    };
+    reader.onerror = () => {
+      setFileError("Unable to read this file. Please try another text file.");
+      setSelectedFileName("");
+      setFileContent("");
+    };
+    reader.readAsText(file);
+  };
+
   const handleAsk = () => {
     const trimmed = question.trim();
     if (!trimmed) {
@@ -121,6 +175,8 @@ const Assistant = () => {
       response = groups.length ? searchGroups(query) : "I need your group data first. Please visit the Groups page and refresh.";
     } else if (query.includes("session") || query.includes("meeting") || query.includes("schedule")) {
       response = sessions.length ? searchSessions(query) : "I need your session data first. Please visit the Sessions page and refresh.";
+    } else if (selectedFileName) {
+      response = explainFileContent(query);
     } else {
       const matchedNote = notes.some((note) => note.title?.toLowerCase().includes(query));
       const matchedGroup = groups.some((group) => group.group_name?.toLowerCase().includes(query));
@@ -128,6 +184,7 @@ const Assistant = () => {
       if (matchedNote) response = searchNotes(query);
       else if (matchedGroup) response = searchGroups(query);
       else if (matchedSession) response = searchSessions(query);
+      else if (fileContent) response = explainFileContent(query);
     }
 
     setHistory((prev) => [...prev, { question: trimmed, answer: response }]);
@@ -149,6 +206,16 @@ const Assistant = () => {
 
         <div className="assistant-body">
           <div className="assistant-input-card">
+            <label className="assistant-file-label">
+              Select a text file to explain (optional):
+              <input
+                type="file"
+                accept=".txt,.md,text/plain"
+                onChange={handleFileSelect}
+              />
+            </label>
+            {selectedFileName && <p className="assistant-file-name">Loaded file: {selectedFileName}</p>}
+            {fileError && <span className="assistant-error">{fileError}</span>}
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}

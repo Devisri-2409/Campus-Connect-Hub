@@ -39,6 +39,21 @@
     gap:25px;
 }
 
+.no-sessions{
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    border: 1px dashed var(--border-color);
+    border-radius: 22px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.no-sessions p {
+    margin: 0;
+    line-height: 1.75;
+}
+
 .session-card{
     background:var(--bg-secondary);
     border-radius:22px;

@@ -26,10 +26,21 @@ const Sessions = () => {
     const fetchSessions = async () => {
         try {
             const data = await getAllSessions();
-            const upcomingSessions = data.filter((session) => {
-                const sessionDateTime = new Date(`${session.session_date}T${session.session_time || "00:00"}`);
-                return sessionDateTime >= new Date();
-            });
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const upcomingSessions = data
+                .filter((session) => {
+                    const sessionDate = new Date(session.session_date);
+                    sessionDate.setHours(0, 0, 0, 0);
+                    return sessionDate >= today;
+                })
+                .sort((a, b) => {
+                    const aDateTime = new Date(`${a.session_date}T${a.session_time || "00:00"}`);
+                    const bDateTime = new Date(`${b.session_date}T${b.session_time || "00:00"}`);
+                    return aDateTime - bDateTime;
+                });
+
             setSessions(upcomingSessions);
         } catch (err) {
             console.log(err);
@@ -127,48 +138,59 @@ const Sessions = () => {
             </div>
 
             <div className="session-grid">
-
-                {sessions.map((session) => (
-
-                    <div
-                        className="session-card"
-                        key={session.session_id}
-                    >
-
-                        <h2>{session.title}</h2>
-
-                        <p>{session.description}</p>
-                        <p>👥 {session.group_name}</p>
-
-                        <div className="session-meta-row">
-                            <span>📅 {new Date(session.session_date).toLocaleDateString()}</span>
-                            <span>🕛 {new Date(`1970-01T${session.session_time}`).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit"
-                            })}</span>
-                        </div>
-
-                        <p>📍 {session.location}</p>
-                        {session.meeting_link &&(
-                            <a href={session.meeting_link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="join-btn"
-                            >
-                                🟢 Join Meeting
-                            </a>
-                        )}
-
-                        <button
-                            className="delete-btn"
-                            onClick={() => handleDelete(session.session_id)}
-                        >
-                            Delete
-                        </button>
-
+                {sessions.length === 0 ? (
+                    <div className="no-sessions">
+                        <p>No upcoming sessions found.</p>
+                        <p>Use the button above to create your next study session.</p>
                     </div>
+                ) : (
+                   sessions.map((session) => (
+                        <div
+                            className="session-card"
+                            key={session.session_id}
+                        >
 
-                ))}
+                            <h2>{session.title}</h2>
+
+                            <p>{session.description}</p>
+                            <p>👥 {session.group_name}</p>
+
+                            <div className="session-meta-row">
+                                <span>
+                                    📅 {new Date(session.session_date).toLocaleDateString()}
+                                </span>
+
+                                <span>
+                                    🕛 {new Date(`1970-01-01T${session.session_time}`).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    })}
+                                </span>
+                            </div>
+
+                            <p>📍 {session.location}</p>
+
+                            {session.meeting_link && (
+                                <a
+                                    href={session.meeting_link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="join-btn"
+                                >
+                                    🟢 Join Meeting
+                                </a>
+                            )}
+
+                            <button
+                                className="delete-btn"
+                                onClick={() => handleDelete(session.session_id)}
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+                    ))
+                )}
 
             </div>
 
