@@ -5,11 +5,12 @@ const uploadNote = (req, res) => {
        console.log(req.body);
 console.log(req.file);
     const data = {
-        title: req.body.title,
-        file_url: req.file.filename,
-        group_id: req.body.group_id,
-        uploaded_by: req.user.user_id
-    };
+    title: req.body.title,
+    summary: req.body.summary,
+    file_url: req.file.filename,
+    group_id: req.body.group_id,
+    uploaded_by: req.user.user_id
+};
 
     noteModel.uploadNote(data, (err) => {
 

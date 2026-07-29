@@ -4,14 +4,15 @@ const uploadNote = (data, callback) => {
 
     const sql = `
         INSERT INTO notes
-        (title, file_url, group_id, uploaded_by)
-        VALUES (?, ?, ?, ?)
+        (title, summary, file_url, group_id, uploaded_by)
+        VALUES (?, ?, ?, ?, ?)
     `;
 
     db.query(
         sql,
         [
             data.title,
+            data.summary,
             data.file_url,
             data.group_id,
             data.uploaded_by
