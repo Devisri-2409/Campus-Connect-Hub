@@ -4,7 +4,7 @@ export const getAssistantResponse = async (question) => {
   const token = localStorage.getItem("token");
 
   const response = await api.post(
-    "/assistant/query",
+    "/assistant/chat",
     { question },
     {
       headers: {

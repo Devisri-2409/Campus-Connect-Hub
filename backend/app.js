@@ -1,5 +1,6 @@
 const sessionRoutes = require("./routes/sessionRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const assistantRoutes = require("./routes/assistantRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/notes", noteRoutes);
 app.use("/api/sessions", sessionRoutes);
+app.use("/api/assistant", assistantRoutes);
 // Routes
 const authRoutes = require("./routes/authRoutes");
 

@@ -1,196 +1,93 @@
-import React, { useEffect, useState } from "react";
-import { getAllNotes } from "../services/noteService";
-import { getAllGroups } from "../services/groupService";
-import { getAllSessions } from "../services/sessionService";
+import React, { useState } from "react";
+import { getAssistantResponse } from "../services/assistantService";
 import "../styles/Assistant.css";
+
+const suggestionPrompts = [
+  "Find notes about React",
+  "Recommend study groups for AI",
+  "Show today's sessions",
+  "Show upcoming sessions",
+  "Explain the latest note summary"
+];
 
 const Assistant = () => {
   const [question, setQuestion] = useState("");
-  const [selectedFileName, setSelectedFileName] = useState("");
-  const [fileContent, setFileContent] = useState("");
-  const [fileError, setFileError] = useState("");
-
   const [history, setHistory] = useState([]);
-  const [notes, setNotes] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [sessions, setSessions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [notesData, groupsData, sessionsData] = await Promise.all([
-          getAllNotes(),
-          getAllGroups(),
-          getAllSessions()
-        ]);
-        setNotes(notesData);
-        setGroups(groupsData);
-        setSessions(sessionsData);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const formatDate = (dateValue) => {
-    if (!dateValue) return "Unknown date";
-    const date = new Date(dateValue);
-    return date.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
-  };
-
-  const formatTime = (timeValue) => {
-    if (!timeValue) return "Unknown time";
-    const time = new Date(`1970-01-01T${timeValue}`);
-    return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  const searchNotes = (query) => {
-    const match = notes.filter((note) => {
-      const target = `${note.title} ${note.description}`.toLowerCase();
-      return query.split(" ").some((token) => target.includes(token));
-    });
-
-    if (!match.length) {
-      return "I couldn't find a matching note, but try using a specific topic or keyword from the Notes page.";
-    }
-
-    const note = match[0];
-    return `I found a note titled "${note.title}". ${note.description || "No description available."} If you'd like, ask me to explain a specific note title or keyword.`;
-  };
-
-  const searchGroups = (query) => {
-    const match = groups.filter((group) => {
-      const target = `${group.group_name} ${group.subject}`.toLowerCase();
-      return query.split(" ").some((token) => target.includes(token));
-    });
-
-    if (!match.length) {
-      return `I couldn't find a matching group from your current groups, but I can tell you about all available groups or how to join one.`;
-    }
-
-    const group = match[0];
-    return `Here is the group I found: ${group.group_name}. Subject: ${group.subject || "not specified"}. Description: ${group.description || "No description available."}.`;  
-  };
-
-  const searchSessions = (query) => {
-    const upcoming = sessions
-      .map((session) => ({
-        ...session,
-        dateTime: new Date(`${session.session_date}T${session.session_time || "00:00"}`)
-      }))
-      .filter((session) => session.dateTime >= new Date())
-      .sort((a, b) => a.dateTime - b.dateTime);
-
-    if (query.includes("upcoming") || query.includes("next")) {
-      if (!upcoming.length) {
-        return "No upcoming sessions are scheduled right now.";
-      }
-      const next = upcoming[0];
-      return `The next session is ${next.title} on ${formatDate(next.session_date)} at ${formatTime(next.session_time)} in ${next.location || "an online meeting"}.`; 
-    }
-
-    const match = sessions.filter((session) => {
-      const target = `${session.title} ${session.description} ${session.group_name}`.toLowerCase();
-      return query.split(" ").some((token) => target.includes(token));
-    });
-
-    if (!match.length) {
-      return "I couldn't find a matching session, but I can show you upcoming session details if you ask about upcoming or next sessions.";
-    }
-
-    const session = match[0];
-    return `I found a session titled "${session.title}" for ${session.group_name}. It is scheduled on ${formatDate(session.session_date)} at ${formatTime(session.session_time)}. Location: ${session.location || "No location provided"}.`;
-  };
-
-  const explainFileContent = (query) => {
-    if (!fileContent) {
-      return "No file content loaded. Please select a text file to explain.";
-    }
-
-    const lowerQuery = query.toLowerCase();
-    const lines = fileContent.split(/\r?\n/).filter((line) => line.trim());
-    const tokens = lowerQuery.split(/\s+/).filter(Boolean);
-
-    const matchingLine = lines.find((line) =>
-      tokens.every((token) => line.toLowerCase().includes(token))
-    );
-
-    if (matchingLine) {
-      return `From ${selectedFileName}: ${matchingLine.trim()}. If you want more details, ask about another keyword or concept from the file.`;
-    }
-
-    const preview = fileContent.slice(0, 450).replace(/\s+/g, " ");
-    return `I loaded ${selectedFileName}. Here is a quick snapshot of the file content: ${preview}${fileContent.length > 450 ? "..." : ""}`;
-  };
-
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];
-    if (!file) {
-      setSelectedFileName("");
-      setFileContent("");
-      setFileError("");
-      return;
-    }
-
-    if (!file.type.includes("text") && !file.name.endsWith(".md") && !file.name.endsWith(".txt")) {
-      setFileError("Only plain text or markdown files are supported right now.");
-      setSelectedFileName("");
-      setFileContent("");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setSelectedFileName(file.name);
-      setFileContent(reader.result || "");
-      setFileError("");
-    };
-    reader.onerror = () => {
-      setFileError("Unable to read this file. Please try another text file.");
-      setSelectedFileName("");
-      setFileContent("");
-    };
-    reader.readAsText(file);
-  };
-
-  const handleAsk = () => {
-    const trimmed = question.trim();
+  const handleAsk = async (value = question) => {
+    const trimmed = value.trim();
     if (!trimmed) {
       setError("Please enter your question before sending.");
       return;
     }
 
-    let response = "I am here to help you with notes, groups, and sessions. Ask me about note explanations, group details, or session schedules.";
-    const query = trimmed.toLowerCase();
+    setError("");
+    setLoading(true);
+    setHistory((prev) => [...prev, { type: "user", content: trimmed }]);
 
-    if (query.includes("note") || query.includes("notes") || query.includes("explain")) {
-      response = notes.length ? searchNotes(query) : "I need your notes data first. Please visit the Notes page and refresh.";
-    } else if (query.includes("group") || query.includes("study group") || query.includes("join group")) {
-      response = groups.length ? searchGroups(query) : "I need your group data first. Please visit the Groups page and refresh.";
-    } else if (query.includes("session") || query.includes("meeting") || query.includes("schedule")) {
-      response = sessions.length ? searchSessions(query) : "I need your session data first. Please visit the Sessions page and refresh.";
-    } else if (selectedFileName) {
-      response = explainFileContent(query);
-    } else {
-      const matchedNote = notes.some((note) => note.title?.toLowerCase().includes(query));
-      const matchedGroup = groups.some((group) => group.group_name?.toLowerCase().includes(query));
-      const matchedSession = sessions.some((session) => session.title?.toLowerCase().includes(query));
-      if (matchedNote) response = searchNotes(query);
-      else if (matchedGroup) response = searchGroups(query);
-      else if (matchedSession) response = searchSessions(query);
-      else if (fileContent) response = explainFileContent(query);
+    try {
+      const response = await getAssistantResponse(trimmed);
+      setHistory((prev) => [
+        ...prev,
+        {
+          type: "assistant",
+          content: response.reply,
+          items: response.items || [],
+          resultType: response.type
+        }
+      ]);
+      setQuestion("");
+    } catch (err) {
+      setHistory((prev) => [
+        ...prev,
+        {
+          type: "assistant",
+          content: "The assistant could not reach the server. Please try again in a moment.",
+          items: [],
+          resultType: "error"
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderMessageContent = (message) => {
+    if (message.type === "user") {
+      return <div className="assistant-bubble user">{message.content}</div>;
     }
 
-    setHistory((prev) => [...prev, { question: trimmed, answer: response }]);
-    
-    setQuestion("");
-    setError("");
+    return (
+      <div className="assistant-bubble assistant">
+        <div className="assistant-message-text">{message.content}</div>
+        {message.items?.length > 0 && (
+          <div className="assistant-card-list">
+            {message.items.map((item) => (
+              <div key={item.id} className="assistant-card-item">
+                <div className="assistant-card-title">{item.title}</div>
+                <div className="assistant-card-subtitle">{item.subtitle}</div>
+                <div className="assistant-card-summary">{item.summary}</div>
+                {item.downloadUrl && (
+                  <a className="assistant-link" href={item.downloadUrl} target="_blank" rel="noreferrer">
+                    Download note
+                  </a>
+                )}
+                {item.meetingLink && (
+                  <a className="assistant-link" href={item.meetingLink} target="_blank" rel="noreferrer">
+                    Join meeting
+                  </a>
+                )}
+                {item.location && !item.meetingLink && (
+                  <div className="assistant-card-location">Location: {item.location}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -198,55 +95,61 @@ const Assistant = () => {
       <div className="assistant-panel">
         <div className="assistant-header">
           <div>
-            <h1>AI Assistant</h1>
-            <p>Ask about notes, group details, or upcoming sessions.</p>
+            <h1>Campus AI Assistant</h1>
+            <p>Ask questions about notes, study groups, and study sessions.</p>
           </div>
-          <span className="assistant-badge">Powered by campus data</span>
+          <span className="assistant-badge">Connected to MySQL data</span>
         </div>
 
-        <div className="assistant-body">
-          <div className="assistant-input-card">
-            <label className="assistant-file-label">
-              Select a text file to explain (optional):
-              <input
-                type="file"
-                accept=".txt,.md,text/plain"
-                onChange={handleFileSelect}
-              />
-            </label>
-            {selectedFileName && <p className="assistant-file-name">Loaded file: {selectedFileName}</p>}
-            {fileError && <span className="assistant-error">{fileError}</span>}
-            <textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Type your question here..."
-              rows={4}
-            />
-            {error && <span className="assistant-error">{error}</span>}
-            <button className="assistant-submit" onClick={handleAsk}>
-              Ask AI
+        <div className="assistant-suggestions">
+          {suggestionPrompts.map((prompt) => (
+            <button key={prompt} className="assistant-chip" onClick={() => handleAsk(prompt)}>
+              {prompt}
             </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="assistant-response-card">
-            <h2>Response</h2>
-            {loading ? (
-              <p>Loading your notes, groups, and session data...</p>
-            ) : (
-              <div className="assistant-response">
-                {history.length === 0 ? (
-                  <p>Ask a question to get started. For example: "Explain my last note" or "What is the next session?"</p>
-                ) : (
-                  history.slice().reverse().map((item, index) => (
-                    <div key={index} className="assistant-exchange">
-                      <div className="assistant-question">Q: {item.question}</div>
-                      <div className="assistant-answer">A: {item.answer}</div>
-                    </div>
-                  ))
-                )}
+        <div className="assistant-chat-window">
+          {history.length === 0 ? (
+            <div className="assistant-empty-state">
+              <h3>How can I help today?</h3>
+              <p>Use the prompts above or ask a question like “Show today’s sessions” or “Find notes about React”.</p>
+            </div>
+          ) : (
+            history.map((message, index) => (
+              <div key={`${message.type}-${index}`} className="assistant-message-row">
+                {renderMessageContent(message)}
               </div>
-            )}
-          </div>
+            ))
+          )}
+          {loading && (
+            <div className="assistant-message-row">
+              <div className="assistant-bubble assistant loading">
+                <span className="assistant-dot" />
+                <span className="assistant-dot" />
+                <span className="assistant-dot" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="assistant-input-card">
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Ask about notes, groups, or study sessions..."
+            rows={4}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                handleAsk();
+              }
+            }}
+          />
+          {error && <span className="assistant-error">{error}</span>}
+          <button className="assistant-submit" onClick={() => handleAsk()}>
+            Ask AI
+          </button>
         </div>
       </div>
     </div>
