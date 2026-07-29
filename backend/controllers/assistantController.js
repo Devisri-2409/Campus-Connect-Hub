@@ -160,27 +160,28 @@ const chatWithAssistant = async (req, res) => {
       });
     }
 
-    const [notes] = await queryDb(`
-      SELECT
+   const notes = await queryDb(`
+    SELECT
         n.note_id,
         n.title,
         n.summary,
         n.file_url,
         n.created_at,
         sg.group_name
-      FROM notes n
-      LEFT JOIN study_groups sg ON n.group_id = sg.group_id
-      ORDER BY n.created_at DESC
-    `);
+    FROM notes n
+    LEFT JOIN study_groups sg
+        ON n.group_id = sg.group_id
+    ORDER BY n.created_at DESC
+`);
 
-    const [groups] = await queryDb(`
-      SELECT *
-      FROM study_groups
-      ORDER BY group_name ASC
-    `);
+const groups = await queryDb(`
+    SELECT *
+    FROM study_groups
+    ORDER BY group_name ASC
+`);
 
-    const [sessions] = await queryDb(`
-      SELECT
+const sessions = await queryDb(`
+    SELECT
         ss.session_id,
         ss.title,
         ss.description,
@@ -189,10 +190,11 @@ const chatWithAssistant = async (req, res) => {
         ss.location,
         ss.meeting_link,
         sg.group_name
-      FROM study_sessions ss
-      JOIN study_groups sg ON ss.group_id = sg.group_id
-      ORDER BY ss.session_date ASC, ss.session_time ASC
-    `);
+    FROM study_sessions ss
+    JOIN study_groups sg
+        ON ss.group_id = sg.group_id
+    ORDER BY ss.session_date ASC, ss.session_time ASC
+`);
 
     const lowerQuestion = normalizeText(question);
     const isNoteIntent = /(note|notes|summary|download|open|keyword|title|explain)/i.test(question);
