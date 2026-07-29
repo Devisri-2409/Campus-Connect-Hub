@@ -78,13 +78,19 @@ const Notes = () => {
                 onChange={(e) => setGroupId(e.target.value)}
             />
 
-            <textarea
-                placeholder="Enter a short summary of the note..."
-                value={summary}
-                onChange={(e) => setSummary(e.target.value)}
-                rows={4}
-            />
+            <div className="form-group">
+    <label className="form-label">
+        📝 Note Summary
+    </label>
 
+    <textarea
+        className="form-textarea"
+        placeholder="Write a short summary of your note..."
+        value={summary}
+        onChange={(e) => setSummary(e.target.value)}
+        rows={4}
+    />
+</div>
             <input
                 type="file"
                 onChange={(e) => setFile(e.target.files[0])}
