@@ -1,11 +1,12 @@
 const sessionRoutes = require("./routes/sessionRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
+const chatRoutes=require("./routes/chatRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const chatRoutes=require("./routes/chatRoutes");
+
 
 
 const app = express();
