@@ -73,6 +73,12 @@ async function searchGroups(keyword){
     OR subject LIKE ?
     OR description LIKE ?
     `;
+    const result = await queryDb(sql, [
+  `%${keyword}%`,
+  `%${keyword}%`,
+  `%${keyword}%`
+]);
+return result;
 
     return await queryDb(sql,[
         `%${keyword}%`,
