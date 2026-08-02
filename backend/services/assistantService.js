@@ -114,9 +114,31 @@ async function searchSessions(keyword){
     ]);
 
 }
+function cleanKeyword(question){
+
+    return question
+        .toLowerCase()
+        .replace(/find/g,"")
+        .replace(/show/g,"")
+        .replace(/recommend/g,"")
+        .replace(/study/g,"")
+        .replace(/group/g,"")
+        .replace(/groups/g,"")
+        .replace(/notes/g,"")
+        .replace(/note/g,"")
+        .replace(/session/g,"")
+        .replace(/sessions/g,"")
+        .replace(/about/g,"")
+        .replace(/for/g,"")
+        .replace(/my/g,"")
+        .replace(/please/g,"")
+        .trim();
+
+}
 
 module.exports={
     normalize,
+    cleanKeyword,
     getNextSession,
     getTodaySessions,
     searchNotes,

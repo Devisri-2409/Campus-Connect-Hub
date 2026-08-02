@@ -1,5 +1,6 @@
 const {
   normalize,
+  cleanKeyword,
   getNextSession,
   getTodaySessions,
   searchNotes,
@@ -20,35 +21,51 @@ const chatWithAssistant = async (req, res) => {
 
     const q = normalize(question);
 
+    const isNextSession = /(next|upcoming|nearest|future)/i.test(q);
+
+    const isTodaySession = /(today)/i.test(q);
+
+    const isNotes = /(note|notes|summary|download|open|explain)/i.test(q);
+
+    const isGroups = /(group|groups|study group|recommend|join|subject)/i.test(q);
+
+    const isSessions = /(session|sessions|meeting|schedule|class)/i.test(q);
+
     let response = {
       type: "general",
-      reply: "I can help you with Notes, Study Groups and Study Sessions.",
+      reply:
+        "I can help you with Notes, Study Groups and Study Sessions.",
       items: []
     };
 
-    // =============================
+    // ==========================
     // NEXT SESSION
-    // =============================
-    if (q.includes("next") || q.includes("upcoming")) {
+    // ==========================
+    if (isNextSession) {
 
       const session = await getNextSession();
 
       if (!session) {
+
         response.reply = "No upcoming study sessions found.";
+
       } else {
+
         response.type = "sessions";
+
         response.reply =
           `Your next session is "${session.title}" on ${session.session_date} at ${session.session_time}.`;
 
         response.items = [session];
+
       }
 
     }
 
-    // =============================
-    // TODAY'S SESSION
-    // =============================
-    else if (q.includes("today")) {
+    // ==========================
+    // TODAY'S SESSIONS
+    // ==========================
+    else if (isTodaySession) {
 
       const sessions = await getTodaySessions();
 
@@ -61,7 +78,7 @@ const chatWithAssistant = async (req, res) => {
         response.type = "sessions";
 
         response.reply =
-          `You have ${sessions.length} session(s) today.`;
+          `You have ${sessions.length} study session(s) today.`;
 
         response.items = sessions;
 
@@ -69,14 +86,12 @@ const chatWithAssistant = async (req, res) => {
 
     }
 
-    // =============================
+    // ==========================
     // NOTES
-    // =============================
-    else if (q.includes("note")) {
+    // ==========================
+    else if (isNotes) {
 
-      const keyword = question
-        .replace(/notes?|find|about/gi, "")
-        .trim();
+      const keyword = cleanKeyword(question);
 
       const notes = await searchNotes(keyword);
 
@@ -89,7 +104,7 @@ const chatWithAssistant = async (req, res) => {
         response.type = "notes";
 
         response.reply =
-          `I found ${notes.length} note(s).`;
+          `I found ${notes.length} matching note(s).`;
 
         response.items = notes;
 
@@ -97,14 +112,12 @@ const chatWithAssistant = async (req, res) => {
 
     }
 
-    // =============================
+    // ==========================
     // GROUPS
-    // =============================
-    else if (q.includes("group") || q.includes("recommend")) {
+    // ==========================
+    else if (isGroups) {
 
-      const keyword = question
-        .replace(/groups?|recommend|study/gi, "")
-        .trim();
+      const keyword = cleanKeyword(question);
 
       const groups = await searchGroups(keyword);
 
@@ -117,7 +130,7 @@ const chatWithAssistant = async (req, res) => {
         response.type = "groups";
 
         response.reply =
-          `I found ${groups.length} study group(s).`;
+          `I found ${groups.length} matching study group(s).`;
 
         response.items = groups;
 
@@ -125,14 +138,12 @@ const chatWithAssistant = async (req, res) => {
 
     }
 
-    // =============================
+    // ==========================
     // SESSION SEARCH
-    // =============================
-    else if (q.includes("session")) {
+    // ==========================
+    else if (isSessions) {
 
-      const keyword = question
-        .replace(/sessions?/gi, "")
-        .trim();
+      const keyword = cleanKeyword(question);
 
       const sessions = await searchSessions(keyword);
 
@@ -145,7 +156,7 @@ const chatWithAssistant = async (req, res) => {
         response.type = "sessions";
 
         response.reply =
-          `I found ${sessions.length} session(s).`;
+          `I found ${sessions.length} matching session(s).`;
 
         response.items = sessions;
 
@@ -160,7 +171,7 @@ const chatWithAssistant = async (req, res) => {
 
   } catch (err) {
 
-    console.error(err);
+    console.error("Assistant Error:", err);
 
     return res.status(500).json({
       success: false,
