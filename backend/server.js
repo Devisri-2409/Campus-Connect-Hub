@@ -1,14 +1,19 @@
 require("dotenv").config();
 
-const app = require("./app");
-require("./config/db");
-const userRoutes = require("./routes/userRoutes");
+const http = require("http");
 
-app.use("/api/users", userRoutes);
+const app = require("./app");
+
+require("./config/db");
+
+const { initSocket } = require("./socket/socket");
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`🔥This is My server`);
+const server = http.createServer(app);
+
+initSocket(server);
+
+server.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-console.log(`🚀 Server running on http://localhost:${PORT}`);

@@ -13,6 +13,7 @@ import {
     FaCalendarAlt,
     FaUserCircle
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const StudyGroups = () => {
     const [showModal, setShowModal] = useState(false);
@@ -292,24 +293,31 @@ const handleDeleteGroup = async (groupId) => {
     </div>
    {group.created_by !== user?.user_id && (
     <button
-    className="join-btn"
-    onClick={() => handleJoinGroup(group.group_id)}
-    disabled={joinedGroups.includes(group.group_id)}
->
-    {joinedGroups.includes(group.group_id)
-        ? "Joined ✅"
-        : "Join Group"}
-</button>
-   )}
+        className="join-btn"
+        onClick={() => handleJoinGroup(group.group_id)}
+        disabled={joinedGroups.includes(group.group_id)}
+    >
+        {joinedGroups.includes(group.group_id)
+            ? "Joined ✅"
+            : "Join Group"}
+    </button>
+)}
 
 {group.created_by === user?.user_id && (
     <button
-    className="delete-btn"
-    onClick={() => handleDeleteGroup(group.group_id)}
->
-    Delete Group
-</button>
+        className="delete-btn"
+        onClick={() => handleDeleteGroup(group.group_id)}
+    >
+        Delete Group
+    </button>
 )}
+
+<Link
+    to={`/chat/${group.group_id}`}
+    className="chat-btn"
+>
+    💬 Open Chat
+</Link>
 
 </div>
 

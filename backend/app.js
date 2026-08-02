@@ -5,6 +5,9 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const chatRoutes=require("./routes/chatRoutes");
+
+
 const app = express();
 const noteRoutes = require("./routes/noteRoutes");
 app.use(cors());
@@ -13,6 +16,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/notes", noteRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/assistant", assistantRoutes);
+app.use("/api/chat",chatRoutes);
 // Routes
 const authRoutes = require("./routes/authRoutes");
 
