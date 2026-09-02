@@ -1,8 +1,19 @@
+const {
+    createUser,
+    checkEmailExists,
+    findUserByEmail,
+    getUserById,
+    updateUserProfile,
+    saveOTP,
+    getOTP,
+    deleteOTP,
+    markEmailVerified,
+    markPhoneVerified
+} = require("../models/authModel");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { createUser, checkEmailExists, findUserByEmail,getUserById,
-    updateUserProfile } = require("../models/authModel");
 
 const register = async (req, res) => {
 
@@ -41,7 +52,7 @@ const register = async (req, res) => {
 
            const hashedPassword = await bcrypt.hash(password, 10);
 
-console.log("Original Password:", password);
+
 console.log("Hashed Password:", hashedPassword);
             
 
@@ -177,32 +188,230 @@ const updateProfile = (req, res) => {
 
     const user_id = req.user.user_id;
 
-    const { phone, bio } = req.body;
+    const { phone, email, bio, skills } = req.body;
 
-    updateUserProfile(user_id, phone, bio, (err) => {
+    updateUserProfile(
+        user_id,
+        phone,
+        email,
+        bio,
+        skills,
+        (err) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.json({
+                success: true,
+                message: "Profile Updated Successfully 🎉"
+            });
+        }
+    );
+};
+
+const sendEmailOTP = (req, res) => {
+
+    const user_id = req.user.user_id;
+
+    const otp = generateOTP();
+
+    const expires_at = new Date(Date.now() + 5 * 60 * 1000);
+
+    saveOTP(
+        user_id,
+        "email",
+        otp,
+        expires_at,
+        (err) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Unable to generate verification code"
+                });
+            }
+
+            // TEMPORARY DEVELOPMENT MODE
+            console.log("EMAIL OTP:", otp);
+
+            res.json({
+                success: true,
+                message: "Email verification code generated"
+            });
+        }
+    );
+};
+const verifyEmail = (req, res) => {
+
+    const user_id = req.user.user_id;
+    const { otp } = req.body;
+
+    if (!otp) {
+        return res.status(400).json({
+            success: false,
+            message: "OTP is required"
+        });
+    }
+
+    getOTP(user_id, "email", (err, result) => {
 
         if (err) {
-
             return res.status(500).json({
                 success: false,
                 message: err.message
             });
-
         }
 
-        res.json({
-            success: true,
-            message: "Profile Updated Successfully 🎉"
+        if (result.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No verification code found"
+            });
+        }
+
+        const savedOTP = result[0];
+
+        if (new Date() > new Date(savedOTP.expires_at)) {
+            return res.status(400).json({
+                success: false,
+                message: "Verification code expired"
+            });
+        }
+
+        if (savedOTP.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid verification code"
+            });
+        }
+
+        markEmailVerified(user_id, (err) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            deleteOTP(user_id, "email", () => {});
+
+            res.json({
+                success: true,
+                message: "Email verified successfully"
+            });
         });
-
     });
+};
+const sendPhoneOTP = (req, res) => {
 
+    const user_id = req.user.user_id;
+
+    const otp = generateOTP();
+
+    const expires_at = new Date(Date.now() + 5 * 60 * 1000);
+
+    saveOTP(
+        user_id,
+        "phone",
+        otp,
+        expires_at,
+        (err) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Unable to generate verification code"
+                });
+            }
+
+            // TEMPORARY DEVELOPMENT MODE
+            console.log("PHONE OTP:", otp);
+
+            res.json({
+                success: true,
+                message: "Phone verification code generated"
+            });
+        }
+    );
+};
+const verifyPhone = (req, res) => {
+
+    const user_id = req.user.user_id;
+    const { otp } = req.body;
+
+    if (!otp) {
+        return res.status(400).json({
+            success: false,
+            message: "OTP is required"
+        });
+    }
+
+    getOTP(user_id, "phone", (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        if (result.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No verification code found"
+            });
+        }
+
+        const savedOTP = result[0];
+
+        if (new Date() > new Date(savedOTP.expires_at)) {
+            return res.status(400).json({
+                success: false,
+                message: "Verification code expired"
+            });
+        }
+
+        if (savedOTP.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid verification code"
+            });
+        }
+
+        markPhoneVerified(user_id, (err) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            deleteOTP(user_id, "phone", () => {});
+
+            res.json({
+                success: true,
+                message: "Phone verified successfully"
+            });
+        });
+    });
 };
 
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
 module.exports = {
     register,
     login,
     getProfile,
-    updateProfile
+    updateProfile,
+    sendEmailOTP,
+    verifyEmail,
+    sendPhoneOTP,
+    verifyPhone
 };
-

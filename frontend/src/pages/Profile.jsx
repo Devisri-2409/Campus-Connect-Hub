@@ -76,74 +76,172 @@ const Profile = () => {
     }, []);
 
     // Send verification OTP for email
-    const sendEmailVerification = async () => {
-        if (!email || !validateEmail(email)) {
-            setErrors({ email: "Please enter a valid email address" });
-            return;
-        }
+  const sendEmailVerification = async () => {
+    if (!email || !validateEmail(email)) {
+        setErrors({ email: "Please enter a valid email address" });
+        return;
+    }
 
-        try {
-            await api.post("/auth/send-email-otp", { email });
-            setVerificationData((prev) => ({ ...prev, emailSent: true }));
-            alert("Verification code sent to your email ✉️");
-        } catch (err) {
-            alert("Failed to send email verification");
-        }
-    };
+    try {
+        const token = localStorage.getItem("token");
+
+        await api.post(
+            "/auth/send-email-otp",
+            { email },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        setVerificationData((prev) => ({
+            ...prev,
+            emailSent: true
+        }));
+
+        alert("Verification code generated. Check the backend terminal.");
+
+    } catch (err) {
+        console.error("Email OTP Error:", err.response?.data || err);
+        alert(
+            err.response?.data?.message ||
+            "Failed to send email verification"
+        );
+    }
+};
 
     // Send verification OTP for phone
-    const sendPhoneVerification = async () => {
-        if (!phone || !validatePhone(phone)) {
-            setErrors({ phone: "Please enter a valid 10-digit phone number" });
-            return;
-        }
+ const sendPhoneVerification = async () => {
+    if (!phone || !validatePhone(phone)) {
+        setErrors({
+            phone: "Please enter a valid 10-digit phone number"
+        });
+        return;
+    }
 
-        try {
-            await api.post("/auth/send-phone-otp", { phone });
-            setVerificationData((prev) => ({ ...prev, phoneSent: true }));
-            alert("Verification code sent to your phone 📱");
-        } catch (err) {
-            alert("Failed to send phone verification");
-        }
-    };
+    try {
+        const token = localStorage.getItem("token");
+
+        await api.post(
+            "/auth/send-phone-otp",
+            { phone },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        setVerificationData((prev) => ({
+            ...prev,
+            phoneSent: true
+        }));
+
+        alert("Verification code generated. Check the backend terminal.");
+
+    } catch (err) {
+        console.error("Phone OTP Error:", err.response?.data || err);
+        alert(
+            err.response?.data?.message ||
+            "Failed to send phone verification"
+        );
+    }
+};
 
     // Verify email OTP
-    const verifyEmailOtp = async () => {
-        if (!verificationData.emailOtp) {
-            setErrors({ emailOtp: "Please enter verification code" });
-            return;
-        }
+  const verifyEmailOtp = async () => {
+    if (!verificationData.emailOtp) {
+        setErrors({ emailOtp: "Please enter verification code" });
+        return;
+    }
 
-        try {
-            await api.post("/auth/verify-email", {
+    try {
+        const token = localStorage.getItem("token");
+
+        await api.post(
+            "/auth/verify-email",
+            {
                 email,
                 otp: verificationData.emailOtp
-            });
-            setVerificationData((prev) => ({ ...prev, emailOtp: "", emailSent: false }));
-            alert("Email verified successfully ✅");
-        } catch (err) {
-            setErrors({ emailOtp: "Invalid or expired verification code" });
-        }
-    };
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        setVerificationData((prev) => ({
+            ...prev,
+            emailOtp: "",
+            emailSent: false
+        }));
+
+        setUser((prev) => ({
+            ...prev,
+            email_verified: 1
+        }));
+
+        alert("Email verified successfully ✅");
+
+    } catch (err) {
+        console.error("Email Verification Error:", err.response?.data || err);
+
+        setErrors({
+            emailOtp:
+                err.response?.data?.message ||
+                "Invalid or expired verification code"
+        });
+    }
+};
 
     // Verify phone OTP
-    const verifyPhoneOtp = async () => {
-        if (!verificationData.phoneOtp) {
-            setErrors({ phoneOtp: "Please enter verification code" });
-            return;
-        }
+const verifyPhoneOtp = async () => {
+    if (!verificationData.phoneOtp) {
+        setErrors({ phoneOtp: "Please enter verification code" });
+        return;
+    }
 
-        try {
-            await api.post("/auth/verify-phone", {
+    try {
+        const token = localStorage.getItem("token");
+
+        await api.post(
+            "/auth/verify-phone",
+            {
                 phone,
                 otp: verificationData.phoneOtp
-            });
-            setVerificationData((prev) => ({ ...prev, phoneOtp: "", phoneSent: false }));
-            alert("Phone verified successfully ✅");
-        } catch (err) {
-            setErrors({ phoneOtp: "Invalid or expired verification code" });
-        }
-    };
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        setVerificationData((prev) => ({
+            ...prev,
+            phoneOtp: "",
+            phoneSent: false
+        }));
+
+        setUser((prev) => ({
+            ...prev,
+            phone_verified: 1
+        }));
+
+        alert("Phone verified successfully ✅");
+
+    } catch (err) {
+        console.error("Phone Verification Error:", err.response?.data || err);
+
+        setErrors({
+            phoneOtp:
+                err.response?.data?.message ||
+                "Invalid or expired verification code"
+        });
+    }
+};
 
     const handleSave = async () => {
         if (!validateForm()) {
@@ -154,7 +252,7 @@ const Profile = () => {
             const token = localStorage.getItem("token");
             await api.put(
                 "/auth/profile",
-                { phone, email, bio },
+                { phone, email, bio, skills },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
