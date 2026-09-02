@@ -217,19 +217,6 @@ const Profile = () => {
                     <p>{user?.bio || "No bio added yet."}</p>
                 </div>
 
-                <div className="profile-stats">
-                    <div className="stat-card">
-                        <h3>👥</h3>
-                        <h2>2</h2>
-                        <p>Joined Groups</p>
-                    </div>
-                    <div className="stat-card">
-                        <h3>📄</h3>
-                        <h2>5</h2>
-                        <p>Uploaded Notes</p>
-                    </div>
-                </div>
-
                 <button className="edit-profile-btn" onClick={() => setShowModal(true)}>
                     ✏ Edit Profile
                 </button>
