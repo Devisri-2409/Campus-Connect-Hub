@@ -1,5 +1,4 @@
 import api from "./api";
-import axios from "axios";
 export const getAllNotes = async () => {
 
     const token = localStorage.getItem("token");
