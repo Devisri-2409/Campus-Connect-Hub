@@ -252,7 +252,7 @@ const verifyPhoneOtp = async () => {
             const token = localStorage.getItem("token");
             await api.put(
                 "/auth/profile",
-                { phone, email, bio, skills },
+                { phone, email, bio },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
