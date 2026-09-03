@@ -26,3 +26,7 @@ export const uploadNote = async (formData) => {
 
     return response.data;
 };
+export const deleteNote = async (noteId) => {
+    const response = await axios.delete(`${API_URL}/${noteId}`);
+    return response.data;
+};
