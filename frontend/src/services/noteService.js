@@ -1,5 +1,5 @@
 import api from "./api";
-
+import axios from "axios";
 export const getAllNotes = async () => {
 
     const token = localStorage.getItem("token");
@@ -27,6 +27,13 @@ export const uploadNote = async (formData) => {
     return response.data;
 };
 export const deleteNote = async (noteId) => {
-    const response = await axios.delete(`${API_URL}/${noteId}`);
+    const token = localStorage.getItem("token");
+
+    const response = await api.delete(`/notes/${noteId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
     return response.data;
 };
