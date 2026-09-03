@@ -33,5 +33,10 @@ router.get(
     verifyToken,
     controller.getAllNotes
 );
+router.delete(
+    "/:noteId",
+    verifyToken,
+    controller.deleteNote
+);
 
 module.exports=router;

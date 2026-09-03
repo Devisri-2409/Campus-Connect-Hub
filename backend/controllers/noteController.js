@@ -81,7 +81,59 @@ const getAllNotes = (req,res)=>{
 
 };
 
+const deleteNote = (req, res) => {
+    const noteId = req.params.noteId;
+    const userId = req.user.user_id;
+
+    // First check that the note exists and belongs to the logged-in user
+    db.query(
+        "SELECT file_url FROM notes WHERE note_id = ? AND uploaded_by = ?",
+        [noteId, userId],
+        (err, results) => {
+
+            if (err) {
+                console.error("DELETE CHECK ERROR:", err);
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Database error"
+                });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Note not found or you are not allowed to delete it"
+                });
+            }
+
+            db.query(
+                "DELETE FROM notes WHERE note_id = ? AND uploaded_by = ?",
+                [noteId, userId],
+                (err) => {
+
+                    if (err) {
+                        console.error("DELETE ERROR:", err);
+
+                        return res.status(500).json({
+                            success: false,
+                            message: "Failed to delete note"
+                        });
+                    }
+
+                    return res.json({
+                        success: true,
+                        message: "Note deleted successfully"
+                    });
+
+                }
+            );
+        }
+    );
+};
+
 module.exports={
     uploadNote,
-    getAllNotes
+    getAllNotes,
+    deleteNote
 };
