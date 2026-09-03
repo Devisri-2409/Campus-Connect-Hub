@@ -19,8 +19,9 @@ const Assistant = () => {
         const [noteData, groupData, sessionData] = await Promise.all([
           getAllNotes(),
           getAllGroups(),
-          getAllSessions()
+          getAllSessions(),
         ]);
+
         setNotes(noteData);
         setGroups(groupData);
         setSessions(sessionData);
@@ -34,101 +35,216 @@ const Assistant = () => {
     fetchData();
   }, []);
 
+  // Format date in a clean, user-friendly way
   const formatDate = (dateValue) => {
     if (!dateValue) return "Unknown date";
-    return new Date(dateValue).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+
+    const date = new Date(dateValue);
+
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
+  // Format time in 12-hour format
   const formatTime = (timeValue) => {
     if (!timeValue) return "Unknown time";
-    return new Date(`1970-01-01T${timeValue}`).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    const [hours, minutes] = timeValue.split(":");
+
+    const date = new Date();
+    date.setHours(Number(hours), Number(minutes), 0, 0);
+
+    return date.toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
+  // Search notes
   const searchNotes = (query) => {
     const queryText = query.toLowerCase();
+
     const match = notes.find((note) => {
-      const target = `${note.title} ${note.description}`.toLowerCase();
-      return queryText.split(" ").every((token) => target.includes(token));
+      const target = `${note.title || ""} ${
+        note.description || ""
+      }`.toLowerCase();
+
+      return queryText
+        .split(" ")
+        .filter(Boolean)
+        .every((token) => target.includes(token));
     });
 
     if (!match) {
-      return "I couldn't find an exact note match. Try asking something like 'Explain the note about recursion' or 'What is the note on database design?'";
+      return (
+        "I couldn't find an exact note match. Try asking something like " +
+        "'Explain the note about recursion' or " +
+        "'What is the note on database design?'"
+      );
     }
 
-    return `I found a note titled \"${match.title}\". ${match.description || "This note has no description."}`;
+    return `📝 Note: ${match.title}
+
+${match.description || "This note has no description."}`;
   };
 
+  // Search study groups
   const searchGroups = (query) => {
     const queryText = query.toLowerCase();
+
     const match = groups.find((group) => {
-      const target = `${group.group_name} ${group.subject}`.toLowerCase();
-      return queryText.split(" ").every((token) => target.includes(token));
+      const target = `${group.group_name || ""} ${
+        group.subject || ""
+      }`.toLowerCase();
+
+      return queryText
+        .split(" ")
+        .filter(Boolean)
+        .every((token) => target.includes(token));
     });
 
     if (!match) {
-      return "I couldn't find an exact group match. You can ask me to show groups or explain how to join a study group.";
+      return (
+        "I couldn't find an exact group match. " +
+        "You can ask me to show groups or explain how to join a study group."
+      );
     }
 
-    return `I found the group \"${match.group_name}\". Subject: ${match.subject || "not specified"}. Description: ${match.description || "No description available."}.`;
+    return `👥 ${match.group_name}
+
+📚 Subject: ${match.subject || "Not specified"}
+
+${
+  match.description ||
+  "No description is available for this study group."
+}`;
   };
 
+  // Search study sessions
   const searchSessions = (query) => {
+    const now = new Date();
+
     const upcoming = sessions
       .map((session) => ({
         ...session,
-        dateTime: new Date(`${session.session_date}T${session.session_time || "00:00"}`)
+        dateTime: new Date(
+          `${session.session_date}T${session.session_time || "00:00"}`
+        ),
       }))
-      .filter((session) => session.dateTime >= new Date())
+      .filter((session) => session.dateTime >= now)
       .sort((a, b) => a.dateTime - b.dateTime);
 
     if (!upcoming.length) {
-      return "There are no upcoming sessions right now.";
+      return "There are no upcoming study sessions right now.";
     }
 
+    // Next / upcoming session
     if (query.includes("next") || query.includes("upcoming")) {
       const next = upcoming[0];
-      return `The next session is \"${next.title}\" on ${formatDate(next.session_date)} at ${formatTime(next.session_time)}.`;
+
+      return `📚 Your next study session is "${next.title}"
+
+📅 ${formatDate(next.session_date)}
+🕘 ${formatTime(next.session_time)}
+📍 ${next.location || "Online"}`;
     }
 
+    // Search for a particular session
     const queryText = query.toLowerCase();
+
     const match = sessions.find((session) => {
-      const target = `${session.title} ${session.description} ${session.group_name}`.toLowerCase();
-      return queryText.split(" ").every((token) => target.includes(token));
+      const target =
+        `${session.title || ""} ${session.description || ""} ${
+          session.group_name || ""
+        }`.toLowerCase();
+
+      return queryText
+        .split(" ")
+        .filter(Boolean)
+        .every((token) => target.includes(token));
     });
 
     if (!match) {
-      return "I couldn't find an exact session match. Please ask about upcoming sessions or mention the session title.";
+      return (
+        "I couldn't find that session. " +
+        "Try asking about upcoming sessions or mention the session title."
+      );
     }
 
-    return `I found session \"${match.title}\" for ${match.group_name}. It is scheduled on ${formatDate(match.session_date)} at ${formatTime(match.session_time)}.`;
+    return `📚 ${match.title}
+
+👥 Group: ${match.group_name || "Not specified"}
+📅 ${formatDate(match.session_date)}
+🕘 ${formatTime(match.session_time)}
+📍 ${match.location || "Online"}`;
   };
 
+  // Handle AI question
   const handleAsk = () => {
     const trimmed = question.trim();
+
     if (!trimmed) {
       setError("Please enter a question.");
       return;
     }
 
-    let response = "Ask me about notes, groups, or sessions. For example: 'Explain the note on algebra', 'Tell me about my study group', or 'What is the next session?'";
+    let response =
+      "Ask me about notes, groups, or sessions. For example: 'Explain the note on algebra', 'Tell me about my study group', or 'What is the next session?'";
+
     const lower = trimmed.toLowerCase();
 
-    if (lower.includes("note") || lower.includes("notes") || lower.includes("explain")) {
+    if (
+      lower.includes("note") ||
+      lower.includes("notes") ||
+      lower.includes("explain")
+    ) {
       response = searchNotes(lower);
-    } else if (lower.includes("group") || lower.includes("study group") || lower.includes("join")) {
+    } else if (
+      lower.includes("group") ||
+      lower.includes("study group") ||
+      lower.includes("join")
+    ) {
       response = searchGroups(lower);
-    } else if (lower.includes("session") || lower.includes("meeting") || lower.includes("schedule")) {
+    } else if (
+      lower.includes("session") ||
+      lower.includes("meeting") ||
+      lower.includes("schedule")
+    ) {
       response = searchSessions(lower);
     } else {
-      const matchNote = notes.some((note) => note.title?.toLowerCase().includes(lower));
-      const matchGroup = groups.some((group) => group.group_name?.toLowerCase().includes(lower));
-      const matchSession = sessions.some((session) => session.title?.toLowerCase().includes(lower));
-      if (matchNote) response = searchNotes(lower);
-      else if (matchGroup) response = searchGroups(lower);
-      else if (matchSession) response = searchSessions(lower);
+      const matchNote = notes.some((note) =>
+        note.title?.toLowerCase().includes(lower)
+      );
+
+      const matchGroup = groups.some((group) =>
+        group.group_name?.toLowerCase().includes(lower)
+      );
+
+      const matchSession = sessions.some((session) =>
+        session.title?.toLowerCase().includes(lower)
+      );
+
+      if (matchNote) {
+        response = searchNotes(lower);
+      } else if (matchGroup) {
+        response = searchGroups(lower);
+      } else if (matchSession) {
+        response = searchSessions(lower);
+      }
     }
 
-    setHistory((prev) => [{ question: trimmed, answer: response }, ...prev]);
+    setHistory((prev) => [
+      {
+        question: trimmed,
+        answer: response,
+      },
+      ...prev,
+    ]);
+
     setQuestion("");
     setError("");
   };
@@ -136,45 +252,136 @@ const Assistant = () => {
   return (
     <div className="assistant-page">
       <div className="assistant-panel">
+
+        {/* Header */}
         <div className="assistant-header">
           <div>
-            <h1>AI Assistant</h1>
-            <p>Get instant help with notes, groups, and upcoming sessions.</p>
+            <h1>Campus AI Assistant</h1>
+            <p>
+              Ask questions about notes, study groups, and study sessions.
+            </p>
           </div>
-          <span className="assistant-badge">Campus AI</span>
+
+          <span className="assistant-badge">
+            Campus AI
+          </span>
         </div>
 
-        <div className="assistant-body">
-          <div className="assistant-input-card">
-            <textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask about notes, group info, or sessions..."
-            />
-            {error && <span className="assistant-error">{error}</span>}
-            <button className="assistant-submit" onClick={handleAsk}>
-              Ask AI
-            </button>
-          </div>
+        {/* Suggestions */}
+        <div className="assistant-suggestions">
+          <button
+            className="assistant-chip"
+            onClick={() => setQuestion("Find notes about React")}
+          >
+            Find notes about React
+          </button>
 
-          <div className="assistant-response-card">
-            <h2>Conversation</h2>
-            <div className="assistant-response">
-              {loading ? (
-                <p>Loading data...</p>
-              ) : history.length === 0 ? (
-                <p>Ask anything about your notes, groups, or sessions.</p>
-              ) : (
-                history.map((item, index) => (
-                  <div key={index} className="assistant-exchange">
-                    <div className="assistant-question">Q: {item.question}</div>
-                    <div className="assistant-answer">A: {item.answer}</div>
-                  </div>
-                ))
-              )}
+          <button
+            className="assistant-chip"
+            onClick={() => setQuestion("Show study groups")}
+          >
+            Show study groups
+          </button>
+
+          <button
+            className="assistant-chip"
+            onClick={() => setQuestion("What is my next study session?")}
+          >
+            Show upcoming sessions
+          </button>
+
+          <button
+            className="assistant-chip"
+            onClick={() => setQuestion("Explain the latest note")}
+          >
+            Explain latest note
+          </button>
+        </div>
+
+        {/* Chat */}
+        <div className="assistant-chat-window">
+          {loading ? (
+            <div className="assistant-empty-state">
+              <p>Loading campus data...</p>
             </div>
-          </div>
+          ) : history.length === 0 ? (
+            <div className="assistant-empty-state">
+              <div className="assistant-empty-icon">🤖</div>
+
+              <h2>Welcome to Campus AI</h2>
+
+              <p>
+                Ask me about your notes, study groups,
+                or upcoming study sessions.
+              </p>
+            </div>
+          ) : (
+            history.map((item, index) => (
+              <div key={index} className="assistant-exchange">
+
+                {/* User message */}
+                <div className="assistant-message-row">
+                  <div className="assistant-bubble user">
+                    <span className="message-label">
+                      You
+                    </span>
+
+                    <div className="assistant-message-text">
+                      {item.question}
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI message */}
+                <div className="assistant-message-row">
+                  <div className="assistant-bubble assistant">
+
+                    <span className="message-label">
+                      🤖 Campus AI
+                    </span>
+
+                    <div className="assistant-message-text">
+                      {item.answer}
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            ))
+          )}
         </div>
+
+        {/* Input */}
+        <div className="assistant-input-card">
+
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleAsk();
+              }
+            }}
+            placeholder="Ask about notes, study groups, or sessions..."
+          />
+
+          {error && (
+            <span className="assistant-error">
+              {error}
+            </span>
+          )}
+
+          <button
+            className="assistant-submit"
+            onClick={handleAsk}
+          >
+            Ask AI
+          </button>
+
+        </div>
+
       </div>
     </div>
   );
