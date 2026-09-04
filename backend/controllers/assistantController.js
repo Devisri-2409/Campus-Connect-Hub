@@ -1,4 +1,4 @@
-const openai = require("../config/openai");
+const ai = require("../config/gemini");
 
 const chatWithAssistant = async (req, res) => {
     try {
@@ -11,17 +11,30 @@ const chatWithAssistant = async (req, res) => {
             });
         }
 
-        const response = await openai.responses.create({
-            model: "gpt-4.1-mini",
-            input: [
-                {
-                    role: "system",
-                    content:
-                        "You are Campus AI, a helpful assistant for a student campus platform. Answer questions clearly and concisely. You can help students with studying, notes, study groups, sessions, programming, and general academic questions."
-                },
+        const response = await ai.models.generateContent({
+            model: "gemini-3.7-flash",
+            contents: [
                 {
                     role: "user",
-                    content: question
+                    parts: [
+                        {
+                            text: `You are Campus AI, a helpful assistant for a student campus platform.
+
+Help students with:
+- Studying
+- Notes
+- Study groups
+- Study sessions
+- Programming
+- Data structures
+- Academic questions
+
+Answer clearly, accurately, and concisely.
+
+Student question:
+${question}`
+                        }
+                    ]
                 }
             ]
         });
@@ -29,21 +42,19 @@ const chatWithAssistant = async (req, res) => {
         return res.json({
             success: true,
             type: "ai",
-            reply: response.output_text
+            reply: response.text
         });
 
     } catch (err) {
-    console.error("OPENAI ERROR:", err);
-    console.error("STATUS:", err.status);
-    console.error("MESSAGE:", err.message);
+        console.error("GEMINI ERROR:", err);
+        console.error("STATUS:", err.status);
+        console.error("MESSAGE:", err.message);
 
-    return res.status(500).json({
-        success: false,
-        message: err.message || "AI Assistant failed."
-    });
-}
+        return res.status(500).json({
+            success: false,
+            message: err.message || "AI Assistant failed."
+        });
+    }
 };
 
-module.exports = {
-    chatWithAssistant
-};
+module.exports = { chatWithAssistant };
