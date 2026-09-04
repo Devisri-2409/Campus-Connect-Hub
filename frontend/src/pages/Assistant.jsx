@@ -3,6 +3,7 @@ import { getAllNotes } from "../services/noteService";
 import { getAllGroups } from "../services/groupService";
 import { getAllSessions } from "../services/sessionService";
 import api from "../services/api";
+import ReactMarkdown from "react-markdown";
 import "../styles/Assistant.css";
 
 const Assistant = () => {
@@ -211,8 +212,10 @@ const handleAsk = async () => {
                     </span>
 
                     <div className="assistant-message-text">
-                      {item.answer}
-                    </div>
+  <ReactMarkdown>
+    {item.answer}
+  </ReactMarkdown>
+</div>
 
                   </div>
                 </div>
