@@ -33,13 +33,15 @@ const chatWithAssistant = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("OpenAI Assistant Error:", err);
+    console.error("OPENAI ERROR:", err);
+    console.error("STATUS:", err.status);
+    console.error("MESSAGE:", err.message);
 
-        return res.status(500).json({
-            success: false,
-            message: "AI Assistant failed."
-        });
-    }
+    return res.status(500).json({
+        success: false,
+        message: err.message || "AI Assistant failed."
+    });
+}
 };
 
 module.exports = {
