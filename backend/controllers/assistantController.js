@@ -91,11 +91,13 @@ Rules:
 2. Keep answers clear and easy to understand.
 3. Use headings and bullet points when useful.
 4. Do not invent campus information.
-5. Use the provided campus data when relevant.
-6. If campus data is empty, say that no matching information was found.
-7. For programming questions, give simple examples when useful.
-8. For academic questions, explain step-by-step.
-9. Keep the response concise.
+5. Use the provided campus data only when the question is about notes, groups, or sessions.
+6. If the question is a general programming or academic question, do not mention campus data.
+7. Do not mention that campus data is empty for general questions.
+8. Do not use LaTeX math syntax such as $...$. Use normal text symbols instead.
+9. For programming questions, give simple examples when useful.
+10. For academic questions, explain step-by-step.
+11. Keep the response concise.
 
 Student Question:
 ${question}
