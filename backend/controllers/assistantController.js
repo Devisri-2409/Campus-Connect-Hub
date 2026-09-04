@@ -132,10 +132,27 @@ Campus Connect Data:
 ${JSON.stringify(campusData, null, 2)}
 `;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-3.6-flash",
+       let response;
+
+try {
+    response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt
+    });
+} catch (error) {
+    // If Gemini 2.5 Flash is temporarily unavailable,
+    // try the lighter Flash-Lite model.
+    if (error.status === 503) {
+        console.log("Gemini 2.5 Flash unavailable. Trying Flash-Lite...");
+
+        response = await ai.models.generateContent({
+            model: "gemini-2.5-flash-lite",
             contents: prompt
         });
+    } else {
+        throw error;
+    }
+}
 
         return res.json({
             success: true,
