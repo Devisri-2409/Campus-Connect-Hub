@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllNotes } from "../services/noteService";
 import { getAllGroups } from "../services/groupService";
 import { getAllSessions } from "../services/sessionService";
+import api from "../services/api";
 import "../styles/Assistant.css";
 
 const Assistant = () => {
@@ -64,190 +65,59 @@ const Assistant = () => {
     });
   };
 
-  // Search notes
-  const searchNotes = (query) => {
-    const queryText = query.toLowerCase();
 
-    const match = notes.find((note) => {
-      const target = `${note.title || ""} ${
-        note.description || ""
-      }`.toLowerCase();
-
-      return queryText
-        .split(" ")
-        .filter(Boolean)
-        .every((token) => target.includes(token));
-    });
-
-    if (!match) {
-      return (
-        "I couldn't find an exact note match. Try asking something like " +
-        "'Explain the note about recursion' or " +
-        "'What is the note on database design?'"
-      );
-    }
-
-    return `📝 Note: ${match.title}
-
-${match.description || "This note has no description."}`;
-  };
-
-  // Search study groups
-  const searchGroups = (query) => {
-    const queryText = query.toLowerCase();
-
-    const match = groups.find((group) => {
-      const target = `${group.group_name || ""} ${
-        group.subject || ""
-      }`.toLowerCase();
-
-      return queryText
-        .split(" ")
-        .filter(Boolean)
-        .every((token) => target.includes(token));
-    });
-
-    if (!match) {
-      return (
-        "I couldn't find an exact group match. " +
-        "You can ask me to show groups or explain how to join a study group."
-      );
-    }
-
-    return `👥 ${match.group_name}
-
-📚 Subject: ${match.subject || "Not specified"}
-
-${
-  match.description ||
-  "No description is available for this study group."
-}`;
-  };
-
-  // Search study sessions
-  const searchSessions = (query) => {
-    const now = new Date();
-
-    const upcoming = sessions
-      .map((session) => ({
-        ...session,
-        dateTime: new Date(
-          `${session.session_date}T${session.session_time || "00:00"}`
-        ),
-      }))
-      .filter((session) => session.dateTime >= now)
-      .sort((a, b) => a.dateTime - b.dateTime);
-
-    if (!upcoming.length) {
-      return "There are no upcoming study sessions right now.";
-    }
-
-    // Next / upcoming session
-    if (query.includes("next") || query.includes("upcoming")) {
-      const next = upcoming[0];
-
-      return `📚 Your next study session is "${next.title}"
-
-📅 ${formatDate(next.session_date)}
-🕘 ${formatTime(next.session_time)}
-📍 ${next.location || "Online"}`;
-    }
-
-    // Search for a particular session
-    const queryText = query.toLowerCase();
-
-    const match = sessions.find((session) => {
-      const target =
-        `${session.title || ""} ${session.description || ""} ${
-          session.group_name || ""
-        }`.toLowerCase();
-
-      return queryText
-        .split(" ")
-        .filter(Boolean)
-        .every((token) => target.includes(token));
-    });
-
-    if (!match) {
-      return (
-        "I couldn't find that session. " +
-        "Try asking about upcoming sessions or mention the session title."
-      );
-    }
-
-    return `📚 ${match.title}
-
-👥 Group: ${match.group_name || "Not specified"}
-📅 ${formatDate(match.session_date)}
-🕘 ${formatTime(match.session_time)}
-📍 ${match.location || "Online"}`;
-  };
 
   // Handle AI question
-  const handleAsk = () => {
+const handleAsk = async () => {
     const trimmed = question.trim();
 
     if (!trimmed) {
-      setError("Please enter a question.");
-      return;
+        setError("Please enter a question.");
+        return;
     }
 
-    let response =
-      "Ask me about notes, groups, or sessions. For example: 'Explain the note on algebra', 'Tell me about my study group', or 'What is the next session?'";
+    try {
+        setError("");
 
-    const lower = trimmed.toLowerCase();
+        const token = localStorage.getItem("token");
 
-    if (
-      lower.includes("note") ||
-      lower.includes("notes") ||
-      lower.includes("explain")
-    ) {
-      response = searchNotes(lower);
-    } else if (
-      lower.includes("group") ||
-      lower.includes("study group") ||
-      lower.includes("join")
-    ) {
-      response = searchGroups(lower);
-    } else if (
-      lower.includes("session") ||
-      lower.includes("meeting") ||
-      lower.includes("schedule")
-    ) {
-      response = searchSessions(lower);
-    } else {
-      const matchNote = notes.some((note) =>
-        note.title?.toLowerCase().includes(lower)
-      );
+        const response = await api.post(
+            "/assistant/chat",
+            {
+                question: trimmed
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
-      const matchGroup = groups.some((group) =>
-        group.group_name?.toLowerCase().includes(lower)
-      );
+        if (response.data.success) {
+            setHistory((prev) => [
+                ...prev,
+                {
+                    question: trimmed,
+                    answer: response.data.reply
+                }
+            ]);
 
-      const matchSession = sessions.some((session) =>
-        session.title?.toLowerCase().includes(lower)
-      );
+            setQuestion("");
+        } else {
+            setError(
+                response.data.message || "Assistant could not answer."
+            );
+        }
 
-      if (matchNote) {
-        response = searchNotes(lower);
-      } else if (matchGroup) {
-        response = searchGroups(lower);
-      } else if (matchSession) {
-        response = searchSessions(lower);
-      }
+    } catch (err) {
+        console.error("Assistant Error:", err);
+
+        setError(
+            err.response?.data?.message ||
+            "Unable to connect to Campus AI."
+        );
     }
-
-    setHistory((prev) => [
-      {
-        question: trimmed,
-        answer: response,
-      },
-      ...prev,
-    ]);
-
-    setQuestion("");
-    setError("");
-  };
+};
 
   return (
     <div className="assistant-page">
