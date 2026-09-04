@@ -106,11 +106,21 @@ Campus Connect Data:
 ${JSON.stringify(campusData, null, 2)}
 `;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-3.5-flash",
-            contents: prompt
-        });
+        let response;
 
+try {
+    response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt
+    });
+} catch (error) {
+    console.log("Gemini 3.5 Flash failed. Trying fallback model...");
+
+    response = await ai.models.generateContent({
+        model: "gemini-3.1-flash-lite",
+        contents: prompt
+    });
+}
         return res.json({
             success: true,
             type: "ai",
