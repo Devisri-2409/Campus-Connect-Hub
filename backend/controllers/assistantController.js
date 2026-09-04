@@ -133,7 +133,7 @@ ${JSON.stringify(campusData, null, 2)}
 `;
 
         const response = await ai.models.generateContent({
-            model: "gemini-3.7-flash",
+            model: "gemini-2.5-flash",
             contents: prompt
         });
 
