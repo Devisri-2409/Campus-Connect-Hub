@@ -4,6 +4,7 @@ import { getAllGroups } from "../services/groupService";
 import { getAllSessions } from "../services/sessionService";
 import api from "../services/api";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import "../styles/Assistant.css";
 
 const Assistant = () => {
@@ -211,8 +212,10 @@ const handleAsk = async () => {
                       🤖 Campus AI
                     </span>
 
-                    <div className="assistant-message-text">
-  <ReactMarkdown>
+                   <div className="assistant-message-text">
+  <ReactMarkdown
+    remarkPlugins={[remarkGfm]}
+  >
     {item.answer}
   </ReactMarkdown>
 </div>

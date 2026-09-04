@@ -309,3 +309,44 @@
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.08);
 }
+.assistant-message-text h1,
+.assistant-message-text h2,
+.assistant-message-text h3,
+.assistant-message-text h4 {
+  margin: 14px 0 8px;
+  font-weight: 700;
+}
+
+.assistant-message-text p {
+  margin: 0 0 10px;
+  line-height: 1.6;
+}
+
+.assistant-message-text ul,
+.assistant-message-text ol {
+  margin: 8px 0 12px;
+  padding-left: 25px;
+}
+
+.assistant-message-text li {
+  margin-bottom: 6px;
+}
+
+.assistant-message-text strong {
+  font-weight: 700;
+}
+
+.assistant-message-text pre {
+  padding: 12px;
+  overflow-x: auto;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.assistant-message-text code {
+  font-family: monospace;
+}
+
+.assistant-message-text hr {
+  margin: 15px 0;
+}
