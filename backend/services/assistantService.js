@@ -24,7 +24,6 @@ async function getNextSession() {
   `;
 
   const rows = await queryDb(sql);
-
   return rows.length ? rows[0] : null;
 }
 
@@ -36,7 +35,7 @@ async function getTodaySessions() {
     FROM study_sessions ss
     LEFT JOIN study_groups sg
       ON ss.group_id = sg.group_id
-    WHERE DATE(ss.session_date)=CURDATE()
+    WHERE DATE(ss.session_date) = CURDATE()
     ORDER BY ss.session_time ASC
   `;
 
@@ -44,14 +43,13 @@ async function getTodaySessions() {
 }
 
 async function searchNotes(keyword) {
-
   const sql = `
     SELECT
       n.*,
       sg.group_name
     FROM notes n
     LEFT JOIN study_groups sg
-      ON n.group_id=sg.group_id
+      ON n.group_id = sg.group_id
     WHERE
       n.title LIKE ?
       OR n.summary LIKE ?
@@ -63,85 +61,71 @@ async function searchNotes(keyword) {
   ]);
 }
 
-async function searchGroups(keyword){
-
-    const sql=`
+async function searchGroups(keyword) {
+  const sql = `
     SELECT *
     FROM study_groups
     WHERE
-    group_name LIKE ?
-    OR subject LIKE ?
-    OR description LIKE ?
-    `;
-    const result = await queryDb(sql, [
-  `%${keyword}%`,
-  `%${keyword}%`,
-  `%${keyword}%`
-]);
-return result;
+      group_name LIKE ?
+      OR subject LIKE ?
+      OR description LIKE ?
+  `;
 
-    return await queryDb(sql,[
-        `%${keyword}%`,
-        `%${keyword}%`,
-        `%${keyword}%`
-    ]);
-
+  return await queryDb(sql, [
+    `%${keyword}%`,
+    `%${keyword}%`,
+    `%${keyword}%`
+  ]);
 }
 
-async function searchSessions(keyword){
-
-    const sql=`
+async function searchSessions(keyword) {
+  const sql = `
     SELECT
-    ss.*,
-    sg.group_name
+      ss.*,
+      sg.group_name
     FROM study_sessions ss
     LEFT JOIN study_groups sg
-    ON ss.group_id=sg.group_id
-
+      ON ss.group_id = sg.group_id
     WHERE
-
-    ss.title LIKE ?
-    OR ss.description LIKE ?
-    OR sg.group_name LIKE ?
-
+      ss.title LIKE ?
+      OR ss.description LIKE ?
+      OR sg.group_name LIKE ?
     ORDER BY ss.session_date
-    `;
+  `;
 
-    return await queryDb(sql,[
-        `%${keyword}%`,
-        `%${keyword}%`,
-        `%${keyword}%`
-    ]);
-
-}
-function cleanKeyword(question){
-
-    return question
-        .toLowerCase()
-        .replace(/find/g,"")
-        .replace(/show/g,"")
-        .replace(/recommend/g,"")
-        .replace(/study/g,"")
-        .replace(/group/g,"")
-        .replace(/groups/g,"")
-        .replace(/notes/g,"")
-        .replace(/note/g,"")
-        .replace(/session/g,"")
-        .replace(/sessions/g,"")
-        .replace(/about/g,"")
-        .replace(/for/g,"")
-        .replace(/my/g,"")
-        .replace(/please/g,"")
-        .trim();
-
+  return await queryDb(sql, [
+    `%${keyword}%`,
+    `%${keyword}%`,
+    `%${keyword}%`
+  ]);
 }
 
-module.exports={
-    normalize,
-    cleanKeyword,
-    getNextSession,
-    getTodaySessions,
-    searchNotes,
-    searchGroups,
-    searchSessions
+function cleanKeyword(question) {
+  return question
+    .toLowerCase()
+    .replace(/find/g, "")
+    .replace(/show/g, "")
+    .replace(/recommend/g, "")
+    .replace(/study/g, "")
+    .replace(/group/g, "")
+    .replace(/groups/g, "")
+    .replace(/notes/g, "")
+    .replace(/note/g, "")
+    .replace(/session/g, "")
+    .replace(/sessions/g, "")
+    .replace(/about/g, "")
+    .replace(/for/g, "")
+    .replace(/my/g, "")
+    .replace(/please/g, "")
+    .trim();
+}
+
+module.exports = {
+  normalize,
+  cleanKeyword,
+  getNextSession,
+  getTodaySessions,
+  searchNotes,
+  searchGroups,
+  searchSessions
 };
