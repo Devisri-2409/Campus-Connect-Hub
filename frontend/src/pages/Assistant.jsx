@@ -215,7 +215,7 @@ const handleAsk = async () => {
                    <div className="assistant-message-text">
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
-  >
+  > {"#Markdown Test \n\n **bold** and *italic*."}
     {item.answer}
   </ReactMarkdown>
 </div>
