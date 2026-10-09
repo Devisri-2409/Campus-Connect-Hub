@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
 import Notes from "./pages/Notes";
 import Profile from "./pages/Profile";
+import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -20,7 +21,7 @@ function App() {
   <BrowserRouter>
   <Routes>
     
-    <Route path="/" element={<Navigate to="/login" />} />
+    <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
     <Route path="/chat/:groupId" element={<GroupChat />} />
