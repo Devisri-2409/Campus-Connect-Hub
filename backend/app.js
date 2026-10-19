@@ -10,7 +10,7 @@ const app = express();
 const noteRoutes = require("./routes/noteRoutes");
 
 app.use(cors({
-    origin: "https://campus-connect-hub-theta.vercel.app",
+    origin: ["https://campus-connect-hub-theta.vercel.app", "http://localhost:3000", "http://127.0.0.1:3000"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));

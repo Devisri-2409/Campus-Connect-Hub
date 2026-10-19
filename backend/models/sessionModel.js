@@ -43,8 +43,8 @@ const getAllSessions = (callback) => {
           ss.*,sg.group_name
           FROM study_sessions ss 
           JOIN study_groups sg
-          ON ss.group_id = sg .group_id
-        ORDER BY session_date ASC, session_time ASC
+          ON ss.group_id = sg.group_id
+        ORDER BY ss.session_date ASC, ss.session_time ASC
     `;
 
     db.query(sql, callback);

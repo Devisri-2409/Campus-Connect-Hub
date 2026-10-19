@@ -1,5 +1,6 @@
 const noteModel = require("../models/noteModel");
 const db = require("../config/db");
+const { createNotification } = require("../models/notificationModel");
 
 const uploadNote = (req, res) => {
        console.log(req.body);

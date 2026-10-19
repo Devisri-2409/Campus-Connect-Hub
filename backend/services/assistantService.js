@@ -18,7 +18,7 @@ async function getNextSession() {
     FROM study_sessions ss
     LEFT JOIN study_groups sg
       ON ss.group_id = sg.group_id
-    WHERE ss.session_date >= CURDATE()
+    WHERE ss.session_date >= CURRENT_DATE
     ORDER BY ss.session_date ASC, ss.session_time ASC
     LIMIT 1
   `;
@@ -35,7 +35,7 @@ async function getTodaySessions() {
     FROM study_sessions ss
     LEFT JOIN study_groups sg
       ON ss.group_id = sg.group_id
-    WHERE DATE(ss.session_date) = CURDATE()
+    WHERE ss.session_date = CURRENT_DATE
     ORDER BY ss.session_time ASC
   `;
 
@@ -51,8 +51,8 @@ async function searchNotes(keyword) {
     LEFT JOIN study_groups sg
       ON n.group_id = sg.group_id
     WHERE
-      n.title LIKE ?
-      OR n.summary LIKE ?
+      n.title ILIKE ?
+      OR n.summary ILIKE ?
   `;
 
   return await queryDb(sql, [
@@ -66,9 +66,9 @@ async function searchGroups(keyword) {
     SELECT *
     FROM study_groups
     WHERE
-      group_name LIKE ?
-      OR subject LIKE ?
-      OR description LIKE ?
+      group_name ILIKE ?
+      OR subject ILIKE ?
+      OR description ILIKE ?
   `;
 
   return await queryDb(sql, [
@@ -87,9 +87,9 @@ async function searchSessions(keyword) {
     LEFT JOIN study_groups sg
       ON ss.group_id = sg.group_id
     WHERE
-      ss.title LIKE ?
-      OR ss.description LIKE ?
-      OR sg.group_name LIKE ?
+      ss.title ILIKE ?
+      OR ss.description ILIKE ?
+      OR sg.group_name ILIKE ?
     ORDER BY ss.session_date
   `;
 

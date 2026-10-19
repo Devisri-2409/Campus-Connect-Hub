@@ -37,7 +37,7 @@ const markAsRead = (notification_id, callback) => {
 
     const sql = `
         UPDATE notifications
-        SET is_read = 1
+        SET is_read = TRUE
         WHERE notification_id = ?
     `;
 

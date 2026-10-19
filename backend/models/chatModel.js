@@ -33,9 +33,9 @@ FROM group_messages gm
 JOIN users u
 ON gm.user_id=u.user_id
 
-WHERE group_id=?
+WHERE gm.group_id=?
 
-ORDER BY created_at ASC`,
+ORDER BY gm.created_at ASC`,
 
 [groupId],
 
