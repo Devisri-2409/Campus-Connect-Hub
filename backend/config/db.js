@@ -1,13 +1,23 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
-const pool = new Pool({
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
-    user: process.env.DB_USER || "postgres",
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME || "campus_connect_hub"
-});
+const poolConfig = process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+      }
+    : {
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT, 10) || 5432,
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME || "campus_connect_hub",
+        ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false
+      };
+
+const pool = new Pool(poolConfig);
 
 pool.on("error", (err) => {
     console.error("❌ Unexpected PostgreSQL Pool Error:", err.message);
