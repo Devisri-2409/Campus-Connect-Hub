@@ -1,11 +1,11 @@
 /* ==========================================================================
    AUTHENTICATION STYLES - Campus Connect Hub
-   Theme: Professional Blue (#2563EB) & Dark Navy (#0F172A) on #F8FAFC
+   Theme: Light Lavender (#8B7CF6) & White on Light Lavender (#F4F1FF)
    ========================================================================== */
 
 .auth-page {
   min-height: 100vh;
-  background-color: #F8FAFC;
+  background-color: #F4F1FF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,9 +18,9 @@
   max-width: 1020px;
   display: flex;
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E8E3F5;
   border-radius: 20px;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 12px 32px rgba(139, 124, 246, 0.08);
   overflow: hidden;
 }
 
@@ -29,13 +29,13 @@
    -------------------------------------------------------------------------- */
 .auth-left {
   flex: 0 0 42%;
-  background-color: #0F172A;
+  background: linear-gradient(135deg, #1E1B2E 0%, #2B254E 100%);
   color: #FFFFFF;
   padding: 48px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid #1E293B;
+  border-right: 1px solid #3B3363;
   position: relative;
 }
 
@@ -43,7 +43,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #94A3B8;
+  color: #C4BFDC;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
@@ -52,7 +52,7 @@
 }
 
 .auth-back-link:hover {
-  color: #60A5FA;
+  color: #A78BFA;
 }
 
 .auth-left-brand {
@@ -66,12 +66,13 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background-color: #2563EB;
+  background-color: #8B7CF6;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(139, 124, 246, 0.35);
 }
 
 .auth-left h1 {
@@ -85,7 +86,7 @@
 .auth-left-tagline {
   font-size: 1rem;
   line-height: 1.6;
-  color: #94A3B8;
+  color: #C4BFDC;
   margin-bottom: 32px;
 }
 
@@ -103,7 +104,7 @@
 }
 
 .auth-feature-check {
-  color: #3B82F6;
+  color: #8B7CF6;
   font-size: 1.1rem;
   margin-top: 2px;
   flex-shrink: 0;
@@ -112,13 +113,13 @@
 .auth-feature-text {
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #CBD5E1;
+  color: #EDE9FE;
 }
 
 .auth-left-footer {
   font-size: 0.8rem;
-  color: #64748B;
-  border-top: 1px solid #1E293B;
+  color: #8D87AC;
+  border-top: 1px solid #3B3363;
   padding-top: 20px;
   margin-top: auto;
 }
@@ -142,14 +143,14 @@
 .auth-header h2 {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #1E1B2E;
   margin: 0 0 8px;
   letter-spacing: -0.02em;
 }
 
 .auth-header p {
   font-size: 0.95rem;
-  color: #64748B;
+  color: #6B6680;
   margin: 0;
 }
 
@@ -172,9 +173,9 @@
 }
 
 .auth-alert-success {
-  background-color: #F0FDF4;
+  background-color: #ECFDF5;
   border: 1px solid #86EFAC;
-  color: #15803D;
+  color: #065F46;
 }
 
 /* Form Layout */
@@ -199,28 +200,28 @@
 .auth-field label {
   font-size: 0.88rem;
   font-weight: 600;
-  color: #334155;
+  color: #1E1B2E;
 }
 
 .auth-input-group {
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #CBD5E1;
-  border-radius: 10px;
+  border: 1px solid #E8E3F5;
+  border-radius: 12px;
   background-color: #FFFFFF;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .auth-input-group:focus-within {
-  border-color: #2563EB;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #8B7CF6;
+  box-shadow: 0 0 0 3px rgba(139, 124, 246, 0.18);
 }
 
 .auth-input-icon {
   position: absolute;
   left: 14px;
-  color: #94A3B8;
+  color: #9894A8;
   font-size: 1rem;
   pointer-events: none;
 }
@@ -232,7 +233,7 @@
   border: none;
   background: transparent;
   font-size: 0.92rem;
-  color: #0F172A;
+  color: #1E1B2E;
   outline: none;
   font-family: inherit;
 }
@@ -243,14 +244,14 @@
 }
 
 .auth-input-group input::placeholder {
-  color: #94A3B8;
+  color: #9894A8;
 }
 
 .auth-toggle-btn {
   background: none;
   border: none;
   padding: 0 14px;
-  color: #94A3B8;
+  color: #9894A8;
   font-size: 1rem;
   cursor: pointer;
   display: flex;
@@ -259,7 +260,7 @@
 }
 
 .auth-toggle-btn:hover {
-  color: #2563EB;
+  color: #8B7CF6;
 }
 
 /* Options (Remember Me) */
@@ -275,7 +276,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.88rem;
-  color: #475569;
+  color: #6B6680;
   cursor: pointer;
   user-select: none;
 }
@@ -283,7 +284,7 @@
 .auth-remember-label input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #2563EB;
+  accent-color: #8B7CF6;
   cursor: pointer;
 }
 
@@ -292,14 +293,14 @@
   margin-top: 6px;
   width: 100%;
   padding: 13px 20px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
-  background-color: #2563EB;
+  background-color: #8B7CF6;
   color: #FFFFFF;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 4px 12px rgba(139, 124, 246, 0.25);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -308,8 +309,8 @@
 }
 
 .auth-submit-btn:hover:not(:disabled) {
-  background-color: #1D4ED8;
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  background-color: #7C3AED;
+  box-shadow: 0 6px 16px rgba(139, 124, 246, 0.35);
   transform: translateY(-1px);
 }
 
@@ -323,11 +324,11 @@
   margin-top: 24px;
   text-align: center;
   font-size: 0.9rem;
-  color: #64748B;
+  color: #6B6680;
 }
 
 .auth-switch-link {
-  color: #2563EB;
+  color: #8B7CF6;
   font-weight: 600;
   text-decoration: none;
   margin-left: 4px;
@@ -335,7 +336,7 @@
 }
 
 .auth-switch-link:hover {
-  color: #1D4ED8;
+  color: #7C3AED;
   text-decoration: underline;
 }
 
@@ -351,7 +352,7 @@
   .auth-left {
     flex: none;
     border-right: none;
-    border-bottom: 1px solid #1E293B;
+    border-bottom: 1px solid #3B3363;
     padding: 32px 28px;
   }
 

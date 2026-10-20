@@ -1,56 +1,74 @@
-.session-container{
-    padding:30px;
-    background:#f8fafc;
-    min-height:100vh;
+.session-container {
+    padding: 30px;
+    background: var(--bg-primary);
+    min-height: 100vh;
 }
 
-.session-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-.create-session-btn{
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
+.create-session-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(139, 124, 246, 0.25);
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.session-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:25px;
+.create-session-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
 }
 
-.session-card{
-    background:white;
-    border-radius:15px;
-    padding:25px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+.session-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
 }
 
-.session-card h2{
-    color:#2563eb;
-    margin-bottom:15px;
+.session-card {
+    background: var(--bg-secondary);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    border-left: 6px solid var(--accent-color);
 }
 
-.session-card p{
-    margin:8px 0;
-    color:#475569;
+.session-card h2 {
+    color: var(--accent-color);
+    margin-bottom: 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 
-.session-card button{
-    width:100%;
-    margin-top:20px;
-    padding:12px;
-    background:#10b981;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+.session-card p {
+    margin: 8px 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.session-card button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 11px;
+    background: var(--accent-success);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.session-card button:hover {
+    background: var(--accent-success-hover);
 }
