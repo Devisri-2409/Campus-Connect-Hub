@@ -250,7 +250,7 @@ const Notes = () => {
               <div className="note-footer">
 
                 <a
-                  href={`http://localhost:5000/uploads/${note.file_url}`}
+                  href={`https://campus-connect-hub-af36.onrender.com/uploads/${filename}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="download-btn"
